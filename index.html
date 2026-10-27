@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Cloud & CI/CD Demo Application</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 36px 32px;
+            max-width: 540px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #334155;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+        }
+
+        p.description {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: #ff9900;
+            color: #111827;
+            font-size: 0.92rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #e68a00;
+        }
+
+        .result-box {
+            background-color: #0b1120;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 14px;
+            margin-top: 18px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            word-break: break-all;
+            white-space: pre-wrap;
+            min-height: 50px;
+        }
+
+        .meta-info {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>AWS Cloud & CI/CD Project</h1>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span>Healthy</span>
+            </div>
+        </div>
+
+        <p class="description">
+            Node.js microservice deployed on AWS with automated CI/CD pipeline and health monitoring.
+        </p>
+
+        <button class="btn-primary" onclick="callAPI()">Call Node.js API</button>
+
+        <div class="result-box">
+            <p id="result">Click the button to call API.</p>
+        </div>
+
+        <div class="meta-info">
+            <span>Environment: <strong>AWS EC2</strong></span>
+            <span>Pipeline: <strong>GitHub Actions</strong></span>
+        </div>
+    </div>
+
+    <script>
+        async function callAPI() {
+            const resultElem = document.getElementById('result');
+            resultElem.innerText = 'Calling /api...';
+
+            try {
+                const response = await fetch('/api');
+                const data = await response.json();
+                resultElem.innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultElem.innerText = 'Error calling API: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
