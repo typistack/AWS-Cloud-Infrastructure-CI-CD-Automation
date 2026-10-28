@@ -6,13 +6,56 @@ on:
       - main
 
 jobs:
- docker-build:
-  runs-on: ubuntu-latest
+  docker-build:
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Build Docker Image
-      run: docker build -t cicd_app:0.0.1 .
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ap-southeast-2
+      - name: Login To ECR
+        run: |
+          aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com
 
+      - name: Build Docker Image
+        run: docker build -t cicd_app:latest .
+
+      - name: Tag and Push Image ECR
+        run: |
+          docker tag cicd_app:latest 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_app:latest
+          docker push 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_app:latest
+
+  deploy-to-EC2:
+    needs: docker-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: deploy-to-EC2
+        env:
+          EC2_HOST: ${{secrets.EC2_HOST}}
+          EC2_USER: ${{secrets.EC2_USER}}
+          EC2_SSH_KEY: ${{secrets.EC2_SSH_KEY}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+
+        run: |
+          mkdir -p ~/.ssh
+          echo "$ECR_SSH_KEY" > ~/.ssh/typistack
+          chmod 600 ~/.ssh/typistack
+
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/typistack $EC2_USER@$EC2_HOST "
+              export AWS_ACCESS_KEY_ID='$AWS_ACCESS_KEY_ID'
+              export AWS_SECRET_ACCESS_KEY='$AWS_SECRET_ACCESS_KEY'
+
+              aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com
+              docker pull 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
+              docker stop my_app || true
+              docker rm my_app || true
+              docker run -d --name my_app --restart unless-stopped -p 3000:3000 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
+            "
