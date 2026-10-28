@@ -44,6 +44,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
+
         run: |
           mkdir -p ~/.ssh
           echo "$EC2_SSH_KEY" > ~/.ssh/typistack
@@ -59,3 +60,5 @@ jobs:
               docker rm my_app || true
               docker run -d --name my_app --restart unless-stopped -p 3000:3000 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
             "
+      - name: Run Shell Script
+        run: bash deploy.sh  
