@@ -24,12 +24,12 @@ jobs:
           aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com
 
       - name: Build Docker Image
-        run: docker build -t cicd_app:latest .
+        run: docker build -t cicd_my_app:latest .
 
       - name: Tag and Push Image ECR
         run: |
-          docker tag cicd_app:latest 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_app:latest
-          docker push 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_app:latest
+          docker tag cicd_my_app:latest 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
+          docker push 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
 
   deploy-to-EC2:
     needs: docker-build
@@ -46,7 +46,7 @@ jobs:
 
         run: |
           mkdir -p ~/.ssh
-          echo "$ECR_SSH_KEY" > ~/.ssh/typistack
+          echo "$EC2_SSH_KEY" > ~/.ssh/typistack
           chmod 600 ~/.ssh/typistack
 
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/typistack $EC2_USER@$EC2_HOST "
