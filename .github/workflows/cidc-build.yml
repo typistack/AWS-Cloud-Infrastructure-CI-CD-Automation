@@ -61,4 +61,4 @@ jobs:
               docker run -d --name my_app --restart unless-stopped -p 3000:3000 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
             "
       - name: Run Shell Script
-        run: bash deploy.sh  
+        run: bash deploy.sh 
