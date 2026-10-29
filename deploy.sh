@@ -9,3 +9,7 @@ cd AWS-Cloud-Infrastructure-CI-CD-Automation
 git sparse-checkout init --no-cone
 git sparse-checkout set compose.yaml
 git checkout main
+
+
+cd AWS-Cloud-Infrastructure-CI-CD-Automation
+docker compose up -d
