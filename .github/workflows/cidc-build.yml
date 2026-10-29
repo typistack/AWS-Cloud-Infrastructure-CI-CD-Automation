@@ -59,13 +59,9 @@ jobs:
             export AWS_SECRET_ACCESS_KEY='$AWS_SECRET_ACCESS_KEY'
 
             aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com
-
-            docker pull 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
-
-            docker stop my_app || true
-            docker rm my_app || true
-
-            docker run -d --name my_app --restart unless-stopped -p 3000:3000 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
+            cd /home/ec2-user/AWS-Cloud-Infrastructure-CI-CD-Automation
+            docker compose up -d
+            
           "
 
       - name: Run Shell Script on EC2
