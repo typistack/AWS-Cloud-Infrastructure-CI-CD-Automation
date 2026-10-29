@@ -11,5 +11,3 @@ git sparse-checkout set compose.yaml
 git checkout main
 
 
-cd AWS-Cloud-Infrastructure-CI-CD-Automation
-docker compose up -d
