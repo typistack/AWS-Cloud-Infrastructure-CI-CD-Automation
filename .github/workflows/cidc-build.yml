@@ -107,3 +107,11 @@ jobs:
           chmod 600 ~/.ssh/typistack
 
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/typistack "$EC2_USER@$EC2_HOST" 'bash -s' < ./deploy.sh
+  Production:
+    needs: deploy-to-EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Production Checker
+        run: |
+          curl --fail http://13.211.42.155
