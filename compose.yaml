@@ -2,4 +2,4 @@ services:
   app:
     image: 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
     ports:
-      - "80:3000"
+      - "3000:80"
