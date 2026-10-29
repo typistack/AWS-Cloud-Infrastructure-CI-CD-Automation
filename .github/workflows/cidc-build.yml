@@ -33,9 +33,36 @@ jobs:
         run: |
           docker tag cicd_my_app:latest 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
           docker push 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
+  
+  Testing:
+   needs: docker-build
+   runs-on: ubuntu-latest
+
+   steps: 
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Test docker build
+        run: |
+          docker build -t cicd_my_app:test .
+          docker run -d --name test-app -p 8080:80 cicd_my_app:test
+
+      - name: Check Application Health
+        run: |
+          sleep 5
+          docker ps
+          docker logs test-app
+          curl --fail http://localhost:8080 
+
+      - name: Cleanup
+        if: always()
+        run: docker rm -f test-app || true       
+
+
+
 
   deploy-to-EC2:
-    needs: docker-build
+    needs: Testing
     runs-on: ubuntu-latest
 
     steps:
