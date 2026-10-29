@@ -61,6 +61,8 @@ jobs:
             aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com
             cd /home/ec2-user/AWS-Cloud-Infrastructure-CI-CD-Automation
             git pull origin main
+
+            docker compose down
             docker compose up -d
             
           "
