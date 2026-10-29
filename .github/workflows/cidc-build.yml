@@ -45,7 +45,7 @@ jobs:
       - name: Test docker build
         run: |
           docker build -t cicd_my_app:test .
-          docker run -d --name test-app -p 8080:80 cicd_my_app:test
+          docker run -d --name test-app -p 8080:3000 cicd_my_app:test
 
       - name: Check Application Health
         run: |
