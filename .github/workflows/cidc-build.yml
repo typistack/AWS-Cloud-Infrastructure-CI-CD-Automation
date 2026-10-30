@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - text!1
+      - text!2
 
 jobs:
   docker-build:
