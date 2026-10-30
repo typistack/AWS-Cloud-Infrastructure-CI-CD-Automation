@@ -27,12 +27,12 @@ jobs:
           aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com
 
       - name: Build Docker Images
-        run: docker build -t cicd_my_app:latest .
+        run: docker build -t cicd_my_app:${{ github.sha }} .
 
       - name: Tag and Push Image ECR
         run: |
-          docker tag cicd_my_app:latest 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
-          docker push 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
+          docker tag cicd_my_app:${{ github.sha }} 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:${{ github.sha }}
+          docker push 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:${{ github.sha }}
   
   Testing:
    needs: docker-build
@@ -44,8 +44,8 @@ jobs:
 
       - name: Test docker build
         run: |
-          docker build -t cicd_my_app:test .
-          docker run -d --name test-app -p 8080:3000 cicd_my_app:test
+          docker build -t cicd_my_app:${{ github.sha }} .
+          docker run -d --name test-app -p 8080:3000 cicd_my_app:${{ github.sha }}
 
       - name: Check Application Health
         run: |

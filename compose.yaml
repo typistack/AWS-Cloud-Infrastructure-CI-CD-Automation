@@ -1,5 +1,6 @@
 services:
   app:
     image: 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:latest
+    restart: unless-stopped
     ports:
       - "80:3000"
