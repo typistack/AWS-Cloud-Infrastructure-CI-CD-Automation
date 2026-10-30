@@ -92,7 +92,7 @@ jobs:
             git pull origin main
 
             docker compose down
-            export IMAGE_TAG='${{ github.sha }}
+            export IMAGE_TAG='${{ github.sha }}'
             docker compose up -d
             
           "
