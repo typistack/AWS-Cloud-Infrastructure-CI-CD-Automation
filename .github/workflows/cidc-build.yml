@@ -88,12 +88,11 @@ jobs:
             export AWS_SECRET_ACCESS_KEY='$AWS_SECRET_ACCESS_KEY'
 
             aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com
-            cd /home/ec2-user/AWS-Cloud-Infrastructure-CI-CD-Automation
-            git pull origin main
-
-            docker compose down
-            export IMAGE_TAG='${{ github.sha }}'
-            docker compose up -d
+            docker pull 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:${{ github.sha }}
+            docker stop my_app || true
+            docker rm my_app || true
+            docker run -d --name my_app --restart unless-stopped -p 80:3000 142822702812.dkr.ecr.ap-southeast-2.amazonaws.com/cicd_my_app:${{ github.sha }}
+          
             
           "
 
