@@ -116,4 +116,4 @@ jobs:
     steps:
       - name: Production Checker
         run: |
-          curl --fail http://13.211.42.155
+          curl --fail http://3.107.78.45
